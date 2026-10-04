@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global helper functions
+    function isSignedIn() { return request.auth != null; }
+    function existing() { return resource.data; }
+    function incoming() { return request.resource.data; }
+
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && (
+        request.auth.uid == userId ||
+        (request.auth.token.email != null && (
+          userId == request.auth.token.email ||
+          (resource != null && 'email' in resource.data && resource.data.email == request.auth.token.email)
+        ))
+      );
+    }
+
+    match /transactions/{transactionId} {
+      // Allow read if user owns the transaction (by UID or email)
+      allow read: if isSignedIn() && (
+        existing().userId == request.auth.uid ||
+        (request.auth.token.email != null && (
+          existing().userId == request.auth.token.email ||
+          ('userEmail' in existing() && existing().userEmail == request.auth.token.email)
+        ))
+      );
+      
+      // Allow create if user sets their own userId or email
+      allow create: if isSignedIn() && (
+        incoming().userId == request.auth.uid ||
+        (request.auth.token.email != null && incoming().userId == request.auth.token.email)
+      );
+        
+      // Allow update if user owns the transaction
+      allow update: if isSignedIn() && (
+        existing().userId == request.auth.uid ||
+        (request.auth.token.email != null && (
+          existing().userId == request.auth.token.email ||
+          ('userEmail' in existing() && existing().userEmail == request.auth.token.email)
+        ))
+      );
+        
+      // Allow delete if user owns the transaction
+      allow delete: if isSignedIn() && (
+        existing().userId == request.auth.uid ||
+        (request.auth.token.email != null && (
+          existing().userId == request.auth.token.email ||
+          ('userEmail' in existing() && existing().userEmail == request.auth.token.email)
+        ))
+      );
+    }
+
+    match /budgets/{budgetId} {
+      // Allow read if user owns the budget
+      allow read: if isSignedIn() && (
+        existing().userId == request.auth.uid ||
+        (request.auth.token.email != null && (
+          existing().userId == request.auth.token.email ||
+          ('userEmail' in existing() && existing().userEmail == request.auth.token.email)
+        ))
+      );
+      
+      // Allow create if user sets their own userId
+      allow create: if isSignedIn() && (
+        incoming().userId == request.auth.uid ||
+        (request.auth.token.email != null && incoming().userId == request.auth.token.email)
+      );
+        
+      // Allow update if user owns the budget
+      allow update: if isSignedIn() && (
+        existing().userId == request.auth.uid ||
+        (request.auth.token.email != null && (
+          existing().userId == request.auth.token.email ||
+          ('userEmail' in existing() && existing().userEmail == request.auth.token.email)
+        ))
+      );
+        
+      // Allow delete if user owns the budget
+      allow delete: if isSignedIn() && (
+        existing().userId == request.auth.uid ||
+        (request.auth.token.email != null && (
+          existing().userId == request.auth.token.email ||
+          ('userEmail' in existing() && existing().userEmail == request.auth.token.email)
+        ))
+      );
+    }
+  }
+}

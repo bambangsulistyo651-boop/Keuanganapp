@@ -1,0 +1,9 @@
+{
+  "name": "Simandu Keuangan",
+  "description": "Aplikasi manajemen keuangan pribadi dengan dashboard, pencatatan transaksi, budgeting, dan analitik real-time menggunakan Firebase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "personal_finance",
+    "real_time_database"
+  ]
+}

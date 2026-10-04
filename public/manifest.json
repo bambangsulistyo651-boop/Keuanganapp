@@ -1,0 +1,17 @@
+{
+  "name": "SIMANDU - Personal Finance",
+  "short_name": "SIMANDU",
+  "description": "Aplikasi manajemen keuangan pribadi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
